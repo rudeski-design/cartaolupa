@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#141413" />
+<title>CartãoLupa — Descubra os benefícios do seu cartão</title>
+<style>
+:root{--bg:#f3f0ee;--card:#fcfbfa;--ink:#141413;--red:#e30613;--or:#ff9e1b;--r:40px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-tap-highlight-color:transparent}
+a{color:inherit}
+.ico{width:30px;height:30px;flex:none;vertical-align:middle;shape-rendering:geometricPrecision}
+
+/* SPLASH (100% CSS) */
+#goSplash{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+#splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#000;overflow:hidden;animation:spOut .9s 6s cubic-bezier(.7,0,.2,1) forwards}
+#goSplash:checked + #splash{animation:spOut .9s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes spOut{0%{clip-path:circle(150% at 50% 45%);opacity:1}99%{visibility:visible}100%{clip-path:circle(0% at 50% 45%);opacity:0;visibility:hidden}}
+#splash img{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:.4;pointer-events:none;animation:kb 2.5s ease-out forwards}
+@keyframes kb{from{transform:scale(1.3)}to{transform:scale(1)}}
+.sp-in{position:relative;z-index:2;text-align:center;color:#fff;padding:20px;opacity:0;animation:pop 1s .2s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes pop{from{opacity:0;transform:translateY(24px) scale(.92)}to{opacity:1;transform:none}}
+.sp-logo{width:130px;height:130px;filter:drop-shadow(0 10px 30px #ff9e1b66)}
+.sp-in h1{font-size:clamp(2.2rem,6vw,4rem);letter-spacing:-1px}
+.sp-in p{max-width:440px;margin:auto}
+#start{position:relative;z-index:3;display:inline-block;margin-top:28px;border:1px solid #ffffff55;color:#fff;border-radius:999px;padding:12px 32px;font-size:.85rem;letter-spacing:2px;cursor:pointer;user-select:none;touch-action:manipulation;transition:background .3s}
+#start:hover{background:#ffffff1a}
+#start:focus-visible{outline:3px solid var(--or)}
+.bar{position:absolute;left:0;bottom:0;z-index:1;height:3px;pointer-events:none;background:linear-gradient(90deg,var(--red),var(--or));animation:prog 6s linear forwards}
+@keyframes prog{from{width:0}to{width:100%}}
+
+/* NAV */
+.nav{position:sticky;top:16px;z-index:10;max-width:1000px;margin:16px auto 0;background:#fff;border-radius:999px;display:flex;align-items:center;justify-content:space-between;padding:12px 32px;box-shadow:0 4px 20px #0001}
+.logo{display:flex;align-items:center;gap:8px;font-weight:700;text-decoration:none}
+.logo svg{width:34px;height:34px}
+.nav nav a,.nav nav button{margin-left:24px;font-size:.9rem;text-decoration:none;background:none;border:0;font-family:inherit;color:inherit;cursor:pointer}
+.nav nav a:hover,.nav nav button:hover{color:var(--red)}
+.burger{display:none;width:44px;height:44px;border-radius:50%;border:1px solid #eee;background:#fff;cursor:pointer;place-items:center}
+.burger svg{width:26px;height:26px}
+
+/* GAVETA MOBILE */
+.scrim{position:fixed;inset:0;z-index:50;background:#141413b3;backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:51;width:min(82vw,320px);background:#fff;border-radius:28px 0 0 28px;
+  padding:calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;
+  transform:translateX(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);box-shadow:-20px 0 60px #0003}
+.menu-open .scrim{opacity:1;pointer-events:auto}
+.menu-open .drawer{transform:none}
+.dr-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.drawer a,.drawer button.it{display:flex;align-items:center;gap:14px;min-height:52px;padding:0 14px;border-radius:16px;text-decoration:none;font:inherit;font-weight:600;background:none;border:0;color:inherit;cursor:pointer;text-align:left}
+.drawer a:active,.drawer button.it:active{background:#fff1ec}
+.drawer .it svg{width:28px;height:28px}
+.dr-foot{margin-top:auto;font-size:.75rem;opacity:.6;padding:0 14px}
+
+/* LAYOUT */
+.hero{position:relative;height:520px;margin-top:-80px;overflow:hidden;background:#000}
+.hero img{width:100%;height:100%;object-fit:cover;opacity:.55}
+.hero-txt{position:absolute;inset:0;max-width:1000px;margin:auto;padding:160px 20px 0;color:#fff}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem);max-width:600px;line-height:1.1;margin:16px 0}
+.hero-txt>p:last-child{max-width:520px}
+.tag{font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.tag i{width:8px;height:8px;border-radius:50%;background:var(--or)}
+main{max-width:1080px;margin:auto;padding:40px 20px}
+section{scroll-margin-top:100px}
+.panel{background:var(--card);border-radius:var(--r);padding:48px;margin-bottom:40px}
+.panel h2{font-size:2.2rem;margin-bottom:8px;line-height:1.15}
+.sub{margin-bottom:24px;opacity:.8}
+.filters{display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:24px}
+label{display:flex;flex-direction:column;font-weight:600;font-size:.9rem;gap:6px}
+select,input{padding:12px 18px;border:1px solid #ccc;border-radius:999px;font-size:1rem;background:#fff;min-height:48px;color:inherit}
+select:focus,input:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--or)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px}
+.card{border:1px solid var(--or);border-radius:var(--r);padding:20px;cursor:pointer;transition:.25s;background:#fff;text-align:left;font:inherit;color:inherit}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 34px #0002}
+.card:active{transform:scale(.98)}
+.card h3{font-size:1.1rem;margin-top:14px}.card p{font-size:.85rem;opacity:.75}
+
+/* CARTÃO METÁLICO */
+.plastic{position:relative;aspect-ratio:1.586;border-radius:14px;overflow:hidden;background:var(--g);color:#fff;padding:7% 8%;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 10px 24px #0004,inset 0 1px 1px #fff8,inset 0 -2px 3px #0005}
+.plastic::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(90deg,#ffffff0d 0 1px,#0000000d 1px 2px,transparent 2px 4px),radial-gradient(120% 80% at 20% 0%,#ffffff40,transparent 60%)}
+.plastic::after{content:"";position:absolute;top:0;left:-60%;width:50%;height:100%;pointer-events:none;background:linear-gradient(105deg,transparent,#ffffff70,transparent);transform:skewX(-20deg);transition:left .8s}
+.card:hover .plastic::after{left:130%}
+.det-head .plastic::after{animation:shine 3.5s 1s infinite}
+@keyframes shine{0%{left:-60%}40%,100%{left:130%}}
+.pl-top,.pl-bot{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center}
+.emv{width:16%;aspect-ratio:1.3;border-radius:5px;background:linear-gradient(135deg,#f6e3a1,#c9a24b 45%,#f2d98a 55%,#a9812f);box-shadow:inset 0 0 0 1px #8a6a2a88;position:relative}
+.emv::before{content:"";position:absolute;inset:28% 0;border-top:1px solid #8a6a2a99;border-bottom:1px solid #8a6a2a99}
+.emv::after{content:"";position:absolute;inset:0 38%;border-left:1px solid #8a6a2a99;border-right:1px solid #8a6a2a99}
+.nfc{width:9%;opacity:.85}
+.num{position:relative;z-index:1;letter-spacing:3px;font-size:.95em;text-shadow:0 1px 0 #0006,0 -1px 0 #fff4;white-space:nowrap}
+.pl-bot small{font-size:.65em;opacity:.85;letter-spacing:1px;text-shadow:0 1px 0 #0006}
+.brand{font-weight:800;font-style:italic;text-shadow:0 1px 0 #0006,0 -1px 0 #fff3;text-align:right}
+.cat{font-size:.7em;letter-spacing:2px;text-transform:uppercase;opacity:.9}
+
+.hidden{display:none}
+.det-head{display:flex;gap:32px;flex-wrap:wrap;align-items:center;margin-bottom:32px}
+.det-head .plastic{width:320px;font-size:1.15rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:0 0 24px}
+.facts div{background:#fff;border:1px solid #ff9e1b55;border-radius:20px;padding:14px 18px;font-size:.9rem}
+.facts b{display:block;color:var(--red);font-size:.75rem;text-transform:uppercase;letter-spacing:1px}
+.bens{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.ben{background:#fff;border-radius:28px;padding:24px;box-shadow:0 2px 10px #0000000d}
+.ben h4{margin:8px 0 6px}
+.ben small{color:var(--red);font-weight:700;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.ben details{margin-top:10px}.ben summary{cursor:pointer;font-weight:600;padding:6px 0}
+.ben ol{padding-left:20px;margin-top:8px;font-size:.9rem}
+.ex{background:#fff4ec;border-left:4px solid var(--or);padding:10px;border-radius:8px;margin-top:10px;font-size:.88rem;display:flex;gap:8px;align-items:flex-start}
+.btn{border:1px solid var(--ink);border-radius:999px;padding:8px 20px;min-height:44px;background:none;cursor:pointer;font:inherit;margin-top:8px;display:inline-flex;align-items:center;gap:6px;color:inherit}
+.lnk{display:inline-flex;align-items:center;gap:6px;min-height:44px}
+.steps{padding-left:22px;margin:16px 0}.steps li{margin:8px 0}
+.alert{background:#fff4ec;padding:16px;border-radius:20px;display:flex;gap:10px;align-items:center}
+.dark{background:var(--ink);color:#fff;border-radius:var(--r);padding:48px}
+.dark h2{display:flex;align-items:center;gap:14px}
+footer{text-align:center;padding:30px 20px calc(30px + env(safe-area-inset-bottom));opacity:.7}
+
+/* TOPO */
+#topo{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:20;width:50px;height:50px;border-radius:50%;border:0;cursor:pointer;
+  background:linear-gradient(135deg,var(--red),var(--or));box-shadow:0 8px 24px #e3061355;display:grid;place-items:center;opacity:0;transform:translateY(20px);pointer-events:none;transition:.3s}
+#topo.on{opacity:1;transform:none;pointer-events:auto}
+#topo svg{width:24px;height:24px}
+
+/* JANELAS (Sobre e Perfil) */
+.dlg{border:0;border-radius:32px;max-width:760px;width:calc(100% - 32px);max-height:85vh;margin:auto;padding:0;box-shadow:0 30px 80px #0006;overscroll-behavior:contain;color:var(--ink)}
+.dlg::backdrop{background:#141413b3;backdrop-filter:blur(4px)}
+.dlg[open]{animation:dlg .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes dlg{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+.dlg-head{position:sticky;top:0;z-index:2;background:#fff;display:flex;align-items:center;gap:12px;padding:22px 32px;border-bottom:1px solid #eee}
+.dlg-head svg{width:40px;height:40px}.dlg-head h2{font-size:1.5rem;flex:1}
+.x{width:44px;height:44px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:1.4rem;cursor:pointer;line-height:1;color:inherit}
+.x:hover{border-color:var(--red);color:var(--red)}
+.dlg-body{padding:28px 32px 36px}
+.dlg-body h3{display:flex;align-items:center;gap:10px;margin:24px 0 8px;font-size:1.15rem}
+.dlg-body p,.dlg-body li{font-size:.95rem;margin-bottom:8px}
+.dlg-body ul{padding-left:22px}
+.edu{background:linear-gradient(135deg,#fff1ec,#fff7ea);border:2px solid var(--or);border-radius:24px;padding:20px 22px;margin:8px 0 16px}
+.edu h3{margin-top:0;color:var(--red)}
+
+/* JANELA PERFIL */
+#perfil{max-width:980px}
+.pf-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:start}
+.pf-opts fieldset{border:0;margin-bottom:14px}
+.pf-opts legend{font-weight:700;color:var(--red);font-size:.78rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.chk{flex-direction:row;align-items:center;gap:10px;font-weight:500;padding:10px 14px;border:1px solid #eee;border-radius:14px;margin-bottom:6px;cursor:pointer;transition:.2s}
+.chk input{width:20px;height:20px;min-height:0;padding:0;accent-color:var(--red);flex:none}
+.chk:has(input:checked){border-color:var(--or);background:#fff7ea}
+.pf-res{position:sticky;top:96px;background:#faf7f4;border-radius:24px;padding:18px}
+.pf-res h3{margin:0 0 12px}
+.rk{display:grid;grid-template-columns:100px 1fr;gap:12px;align-items:center;background:#fff;border-radius:18px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px #0000000d}
+.rk .plastic{font-size:.42rem;padding:6%;border-radius:8px}
+.rk h4{font-size:1rem;margin-bottom:2px}
+.rk .pos{color:var(--red);font-weight:800;font-size:.75rem;text-transform:uppercase}
+.rk ul{font-size:.8rem;padding-left:16px;margin:4px 0;opacity:.85}
+.pct{height:6px;border-radius:6px;background:#eee;overflow:hidden;margin:4px 0}
+.pct i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--or))}
+.rk .btn{margin-top:4px;min-height:36px;padding:4px 14px;font-size:.85rem}
+.pf-res .alert{font-size:.85rem;margin-bottom:12px}
+
+/* MOBILE */
+@media(max-width:720px){
+  .nav{top:calc(10px + env(safe-area-inset-top));margin:10px 12px 0;padding:8px 8px 8px 18px}
+  .nav nav{display:none}
+  .burger{display:grid}
+  .hero{height:440px;margin-top:-72px}
+  .hero-txt{padding:120px 20px 0}
+  .hero h1{font-size:2rem}
+  .hero-txt>p:last-child{font-size:.95rem}
+  main{padding:24px 12px}
+  section{scroll-margin-top:84px}
+  .panel{padding:26px 20px;border-radius:28px;margin-bottom:24px}
+  .panel h2{font-size:1.6rem}
+  .filters{grid-template-columns:1fr}
+  select,input{font-size:16px}
+  .grid{grid-template-columns:1fr;gap:16px}
+  .card{border-radius:28px;padding:16px}
+  .card:hover{transform:none;box-shadow:none}
+  .plastic{font-size:1.05rem}
+  .det-head{gap:20px}
+  .det-head .plastic{width:100%}
+  .det-head>div{width:100%}
+  .det-head .btn{width:100%;justify-content:center}
+  .facts{grid-template-columns:1fr 1fr;gap:10px}
+  .facts div{padding:12px 14px;font-size:.85rem;border-radius:16px}
+  .bens{grid-template-columns:1fr;gap:14px}
+  .ben{padding:20px;border-radius:24px}
+  .alert{align-items:flex-start;font-size:.9rem}
+  .dark{padding:28px 20px;border-radius:28px}
+  .dark h2{font-size:1.4rem}
+  .dlg{width:100%;max-width:100%;max-height:92vh;margin:auto 0 0;border-radius:28px 28px 0 0}
+  .dlg[open]{animation:sheet .4s cubic-bezier(.2,.8,.2,1)}
+  @keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+  .dlg-head{padding:16px 20px}
+  .dlg-head::before{content:"";position:absolute;top:6px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:4px;background:#ddd}
+  .dlg-head h2{font-size:1.25rem}
+  .dlg-body{padding:20px 20px calc(28px + env(safe-area-inset-bottom))}
+  .edu{padding:16px}
+  .sp-logo{width:104px;height:104px}
+  #perfil{max-width:100%}
+  .pf-grid{grid-template-columns:1fr}
+  .pf-res{position:static}
+}
+@media(max-width:360px){.facts{grid-template-columns:1fr}.hero h1{font-size:1.7rem}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  #splash{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ÍCONES SVG — .a = contorno vermelho fino | .b = preenchimento laranja -->
+<svg id="sprite" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#e30613"/><stop offset=".5" stop-color="#ff5a10"/><stop offset="1" stop-color="#ffa51f"/>
+    </linearGradient>
+  </defs>
+  <symbol id="logo" viewBox="0 0 100 100">
+    <circle cx="42" cy="42" r="30" fill="none" stroke="url(#lg)" stroke-width="10"/>
+    <line x1="64" y1="64" x2="88" y2="88" stroke="url(#lg)" stroke-width="11" stroke-linecap="round"/>
+    <rect x="25" y="44" width="9" height="16" rx="3" fill="url(#lg)"/>
+    <rect x="37.5" y="34" width="9" height="26" rx="3" fill="url(#lg)"/>
+    <rect x="50" y="24" width="9" height="36" rx="3" fill="url(#lg)"/>
+  </symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path class="a" d="M4 7h16M4 17h16"/><rect class="b" x="4" y="11" width="10" height="2" rx="1"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle class="b" cx="10.5" cy="10.5" r="3"/><circle class="a" cx="10.5" cy="10.5" r="6.5"/><path class="a" d="M15.5 15.5L21 21"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V6M6 11l6-6 6 6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-Segurança" viewBox="0 0 24 24"><path class="b" d="M12 7l4 1.5V12c0 2.5-1.7 4.3-4 5z"/><path class="a" d="M12 3l7 3v6c0 4.5-3 7.8-7 9-4-1.2-7-4.5-7-9V6z"/></symbol>
+  <symbol id="i-Viagem" viewBox="0 0 24 24"><circle class="b" cx="18" cy="18" r="3"/><path class="a" d="M10 14L3 11l1.5-1.5 7 1L16 6c1-1 2.5-1 3 0s0 2-1 3l-4.5 4.5 1 7L13 22l-3-7-3 3v2l-1.5 1L4 18l-2-1.5 1-1.5h2z"/></symbol>
+  <symbol id="i-Compras" viewBox="0 0 24 24"><rect class="b" x="7" y="11" width="10" height="4" rx="1"/><path class="a" d="M5 8h14l-1 13H6zM9 8V6a3 3 0 016 0v2"/></symbol>
+  <symbol id="i-Lifestyle" viewBox="0 0 24 24"><circle class="b" cx="12" cy="12" r="3"/><path class="a" d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></symbol>
+  <symbol id="i-Casa" viewBox="0 0 24 24"><rect class="b" x="10" y="14" width="4" height="7"/><path class="a" d="M3 11l9-7 9 7M5 9.5V21h14V9.5"/></symbol>
+  <symbol id="i-Personalização" viewBox="0 0 24 24"><circle class="b" cx="9" cy="7" r="2.5"/><circle class="b" cx="15" cy="17" r="2.5"/><path class="a" d="M4 7h16M4 17h16"/></symbol>
+  <symbol id="i-Pontos" viewBox="0 0 24 24"><circle class="b" cx="12" cy="12" r="4"/><path class="a" d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><rect class="b" x="11" y="9" width="2" height="5" rx="1"/><circle class="b" cx="12" cy="17" r="1.2"/><path class="a" d="M12 3l10 18H2z"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><circle class="b" cx="12" cy="10" r="3.5"/><path class="a" d="M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9V16h7v-2.1A6 6 0 0012 3z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><circle class="b" cx="12" cy="9" r="3"/><path class="a" d="M12 22s7-6.5 7-12.5a7 7 0 00-14 0C5 15.5 12 22 12 22z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><circle class="b" cx="5" cy="12" r="2"/><path class="a" d="M20 12H7M12 6l-6 6 6 6"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><rect class="b" x="4" y="10" width="10" height="10" rx="2"/><path class="a" d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><circle class="b" cx="12" cy="15.5" r="2"/><path class="a" d="M5 10h14v11H5zM8 10V7a4 4 0 018 0v3"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><rect class="b" x="7" y="7" width="6" height="2" rx="1"/><path class="a" d="M4 4h11a3 3 0 013 3v13H7a3 3 0 01-3-3zM4 17a3 3 0 013-3h11"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle class="b" cx="12" cy="12" r="3"/><circle class="a" cx="12" cy="12" r="9"/><circle class="a" cx="12" cy="12" r="6"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle class="b" cx="12" cy="8" r="2.5"/><circle class="a" cx="12" cy="8" r="4"/><path class="a" d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-nfc" viewBox="0 0 24 24"><path d="M8 7a7 7 0 010 10M12 4a11 11 0 010 16M16 2a14 14 0 010 20" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></symbol>
+</svg>
+<script>
+/* Cores e espessura dos ícones */
+(()=>{const RED="#e30613",ORANGE="#ff9e1b",STROKE="1.5";
+ document.querySelectorAll("#sprite .a").forEach(el=>{
+   el.setAttribute("fill","none");el.setAttribute("stroke",RED);el.setAttribute("stroke-width",STROKE);
+   el.setAttribute("stroke-linecap","round");el.setAttribute("stroke-linejoin","round");});
+ document.querySelectorAll("#sprite .b").forEach(el=>el.setAttribute("fill",ORANGE));})();
+</script>
+
+<!-- APRESENTAÇÃO -->
+<input type="checkbox" id="goSplash" aria-hidden="true" tabindex="-1" />
+<div id="splash" aria-label="Apresentação CartãoLupa">
+  <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80" alt="" />
+  <div class="sp-in">
+    <svg class="sp-logo" aria-hidden="true"><use href="#logo"/></svg>
+    <h1>CartãoLupa</h1>
+    <p>Descubra tudo o que o seu cartão já oferece.</p>
+    <label for="goSplash" id="start" role="button" tabindex="0"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('goSplash').checked=true;}">INICIAR</label>
+  </div>
+  <div class="bar"></div>
+</div>
+
+<header class="nav">
+  <a class="logo" href="#topoPag"><svg aria-hidden="true"><use href="#logo"/></svg>CartãoLupa</a>
+  <nav aria-label="Principal">
+    <a href="#busca">Buscar cartão</a>
+    <button type="button" data-perfil aria-haspopup="dialog">Qual é o seu perfil?</button>
+    <a href="#dicas">Como acessar</a><a href="#seguranca">Segurança</a>
+    <button type="button" data-sobre aria-haspopup="dialog">Sobre CartãoLupa</button>
+  </nav>
+  <button type="button" class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">
+    <svg aria-hidden="true"><use href="#i-menu"/></svg>
+  </button>
+</header>
+
+<!-- MENU MOBILE -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true" inert>
+  <div class="dr-head">
+    <span class="logo"><svg aria-hidden="true"><use href="#logo"/></svg>CartãoLupa</span>
+    <button type="button" class="x" id="fecharMenu" aria-label="Fechar menu">×</button>
+  </div>
+  <a class="it" href="#busca"><svg aria-hidden="true"><use href="#i-search"/></svg>Buscar cartão</a>
+  <button type="button" class="it" data-perfil aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-user"/></svg>Qual é o seu perfil?</button>
+  <a class="it" href="#dicas"><svg aria-hidden="true"><use href="#i-bulb"/></svg>Como acessar</a>
+  <a class="it" href="#seguranca"><svg aria-hidden="true"><use href="#i-lock"/></svg>Segurança</a>
+  <button type="button" class="it" data-sobre aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-book"/></svg>Sobre CartãoLupa</button>
+  <p class="dr-foot">App educativo. Não é aconselhamento financeiro.</p>
+</aside>
+
+<section class="hero" id="topoPag">
+  <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1600&q=80" alt="Pessoa pagando com cartão de crédito em maquininha" />
+  <div class="hero-txt">
+    <p class="tag"><i></i>DASHBOARD DE BENEFÍCIOS</p>
+    <h1>Seu cartão vale mais do que você imagina</h1>
+    <p>Bem-vindo ao <strong>CartãoLupa</strong>! Escolha a bandeira e a categoria e veja os benefícios e o passo a passo para usar cada um.</p>
+  </div>
+</section>
+
+<main>
+  <section id="busca" class="panel">
+    <h2>Encontre o seu cartão</h2>
+    <p class="sub">A bandeira e a categoria (Green, Gold, Platinum, Black…) aparecem na frente ou no verso do cartão.</p>
+    <div class="filters">
+      <label>Bandeira<select id="fBandeira"><option value="">Todas</option></select></label>
+      <label>Buscar<input id="fTexto" type="search" enterkeyhint="search" placeholder="Ex.: Platinum, sala VIP, seguro..." /></label>
+    </div>
+    <div id="lista" class="grid" aria-live="polite"></div>
+  </section>
+
+  <section id="detalhe" class="panel hidden" tabindex="-1"></section>
+
+  <section id="dicas" class="panel">
+    <h2>Como acessar seus benefícios</h2>
+    <ol class="steps">
+      <li><b>Identifique</b> a bandeira e a categoria impressas no cartão.</li>
+      <li><b>Confirme com o banco emissor</b>: cada banco pode incluir ou tirar benefícios.</li>
+      <li><b>Ative</b> o que exige cadastro (portais da bandeira, app de sala VIP).</li>
+      <li><b>Pague com o cartão</b> quando a regra pedir, como no seguro viagem.</li>
+      <li><b>Guarde comprovantes</b> (nota fiscal, fatura, bilhete) para acionar seguros.</li>
+    </ol>
+    <p class="alert"><svg class="ico" aria-hidden="true"><use href="#i-bulb"/></svg><span>Benefício não é dinheiro grátis. Pague a fatura inteira: os juros do rotativo anulam qualquer vantagem.</span></p>
+  </section>
+
+  <section id="seguranca" class="dark">
+    <h2><svg class="ico" style="width:44px;height:44px" aria-hidden="true"><use href="#i-lock"/></svg>Sua segurança em 1º lugar</h2>
+    <p>O CartãoLupa <b>nunca</b> pede número do cartão, CVV ou senha. Só pedimos bandeira e categoria, e nada é armazenado.</p>
+  </section>
+</main>
+
+<button type="button" id="topo" aria-label="Voltar ao topo"><svg aria-hidden="true"><use href="#i-up"/></svg></button>
+
+<!-- JANELA: SOBRE -->
+<dialog id="sobre" class="dlg" aria-labelledby="sobreTit">
+  <div class="dlg-head">
+    <svg aria-hidden="true"><use href="#logo"/></svg>
+    <h2 id="sobreTit">Sobre o CartãoLupa</h2>
+    <button type="button" class="x" id="fecharSobre" aria-label="Fechar">×</button>
+  </div>
+  <div class="dlg-body">
+    <p>O <b>CartãoLupa</b> nasceu de uma constatação simples: muita gente tem um cartão de crédito e não conhece tudo o que ele oferece. Seguros, garantia estendida, salas VIP e proteções de compra costumam ficar escondidos em regulamentos longos e difíceis de ler. Nossa missão é colocar uma lupa sobre esses benefícios e explicá-los em linguagem simples.</p>
+
+    <div class="edu">
+      <h3><svg class="ico" aria-hidden="true"><use href="#i-book"/></svg>Este é um app educativo</h3>
+      <p>Todo o conteúdo do CartãoLupa tem <b>finalidade exclusivamente educativa e informativa</b>. Na prática, isso quer dizer:</p>
+      <ul>
+        <li><b>Não é aconselhamento financeiro.</b> Não dizemos qual cartão você deve contratar, cancelar ou usar. Mostramos critérios para que <b>você</b> decida com consciência.</li>
+        <li><b>Não somos banco, bandeira nem emissor.</b> Não temos vínculo comercial com Mastercard, Visa, Elo, American Express, Hipercard ou qualquer banco. Não vendemos cartões e não recebemos comissão por indicação.</li>
+        <li><b>As informações podem mudar.</b> Bandeiras e bancos alteram benefícios, anuidades e regras sem aviso. Cada dado traz a data da consulta e o link da fonte oficial.</li>
+        <li><b>O emissor tem a palavra final.</b> O mesmo cartão pode ter benefícios diferentes conforme o banco. Antes de contar com um benefício, como um seguro viagem, confirme no app do banco ou no regulamento oficial.</li>
+        <li><b>Os exemplos são ilustrativos.</b> Valores e situações citados servem para facilitar o entendimento, não são garantia de cobertura ou reembolso.</li>
+      </ul>
+    </div>
+
+    <h3><svg class="ico" aria-hidden="true"><use href="#i-target"/></svg>Para que serve</h3>
+    <ul>
+      <li>Identificar os benefícios ligados à <b>bandeira e à categoria</b> do seu cartão.</li>
+      <li>Explicar, passo a passo, <b>como ativar e usar</b> cada benefício.</li>
+      <li>Mostrar <b>custos e regras</b> (anuidade, pontos, exigências) de forma transparente.</li>
+    </ul>
+
+    <h3><svg class="ico" aria-hidden="true"><use href="#i-Pontos"/></svg>Nossos objetivos</h3>
+    <ul>
+      <li><b>Educação financeira:</b> estimular o uso responsável do crédito e o pagamento integral da fatura. Os juros do rotativo anulam qualquer vantagem.</li>
+      <li><b>Transparência:</b> pontos e milhas não são dinheiro grátis. Benefício só vale a pena se não levar a gastos desnecessários.</li>
+      <li><b>Autonomia:</b> ajudar você a fazer as perguntas certas ao seu banco.</li>
+      <li><b>Prevenção de dívidas:</b> nunca incentivamos compras por impulso, parcelamentos sem planejamento ou atrasos.</li>
+    </ul>
+
+    <h3><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>Privacidade (LGPD)</h3>
+    <p>O CartãoLupa não pede nem guarda número do cartão, CVV, senha ou dados pessoais. A busca usa apenas bandeira e categoria, e tudo acontece no seu navegador.</p>
+
+    <p class="alert" style="margin-top:20px"><svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg><span>Em caso de dúvida sobre dívidas ou planejamento financeiro, procure seu banco, o Procon ou um profissional certificado.</span></p>
+  </div>
+</dialog>
+
+<!-- JANELA: PERFIL -->
+<dialog id="perfil" class="dlg" aria-labelledby="perfilTit">
+  <div class="dlg-head">
+    <svg aria-hidden="true"><use href="#i-user"/></svg>
+    <h2 id="perfilTit">Qual é o seu perfil?</h2>
+    <button type="button" class="x" id="fecharPerfil" aria-label="Fechar">×</button>
+  </div>
+  <div class="dlg-body">
+    <div class="edu">
+      <h3><svg class="ico" aria-hidden="true"><use href="#i-target"/></svg>Como funciona</h3>
+      <p>Marque os comportamentos que combinam com o seu dia a dia. O CartãoLupa compara suas respostas com os benefícios de cada categoria de cartão e mostra <b>até 3 opções</b>, da mais compatível para a menos compatível.</p>
+      <p><b>É uma ferramenta educativa, não uma recomendação financeira.</b> Ela não analisa sua renda nem seu crédito, e nada do que você marca é salvo.</p>
+    </div>
+    <div class="pf-grid">
+      <form id="pfForm" class="pf-opts" onsubmit="return false"></form>
+      <aside id="pfRes" class="pf-res" aria-live="polite"></aside>
+    </div>
+  </div>
+</dialog>
+
+<footer><small>© CartãoLupa – Não é aconselhamento financeiro – Consultado em sites oficiais em 10/11/2026 e 11/11/2026 – Os benefícios podem mudar sem aviso: confirme com seu emissor.</small></footer>
+
+<script>
+const $=s=>document.querySelector(s), html=document.documentElement;
+
+/* MENU MOBILE */
+const drawer=$("#drawer"),burger=$("#burger");
+function menu(open){
+  html.classList.toggle("menu-open",open);
+  document.body.style.overflow=open?"hidden":"";
+  burger.setAttribute("aria-expanded",open);
+  drawer.setAttribute("aria-hidden",!open);
+  drawer.inert=!open;
+  if(open)$("#fecharMenu").focus();else burger.focus({preventScroll:true});
+}
+burger.onclick=()=>menu(true);
+$("#fecharMenu").onclick=()=>menu(false);
+$("#scrim").onclick=()=>menu(false);
+drawer.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>menu(false)));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&html.classList.contains("menu-open"))menu(false);});
+const mq=matchMedia("(min-width:721px)");
+(mq.addEventListener?mq.addEventListener.bind(mq,"change"):mq.addListener.bind(mq))(e=>{if(e.matches&&html.classList.contains("menu-open"))menu(false);});
+
+/* JANELAS */
+const abrirDlg=d=>{if(html.classList.contains("menu-open"))menu(false);d.showModal?d.showModal():d.setAttribute("open","");d.scrollTop=0;};
+const fecharDlg=d=>d.close?d.close():d.removeAttribute("open");
+const dlg=$("#sobre");
+document.querySelectorAll("[data-sobre]").forEach(b=>b.onclick=()=>abrirDlg(dlg));
+$("#fecharSobre").onclick=()=>fecharDlg(dlg);
+dlg.addEventListener("click",e=>{if(e.target===dlg)fecharDlg(dlg);});
+
+/* VOLTAR AO TOPO */
+const topo=$("#topo");
+addEventListener("scroll",()=>topo.classList.toggle("on",scrollY>600),{passive:true});
+topo.onclick=()=>scrollTo({top:0,behavior:"smooth"});
+
+/* DADOS */
+const B={
+zero:{t:"Proteção contra fraude",cat:"Segurança",d:"Você não paga por compras que não fez, desde que avise o banco.",c:["Acompanhe as notificações do app do banco","Bloqueie o cartão no app ao ver algo estranho","Conteste a compra com o emissor"],ex:"Compra online de R$ 800 que você não fez? Conteste e o valor é estornado após análise."},
+emerg:{t:"Serviços de emergência 24h",cat:"Viagem",d:"Bloqueio, cartão substituto e saque emergencial em caso de perda ou roubo.",c:["Ligue para a central da bandeira ou para o número do verso","Informe seus dados (nunca a senha)","Peça o cartão substituto ou o saque emergencial"],ex:"Perdeu o cartão em Lisboa? A central pode enviar um cartão de emergência ao hotel."},
+desc:{t:"Portal de descontos",cat:"Compras",d:"Ofertas em lojas, gastronomia e serviços parceiros.",c:["Entre no portal oficial da bandeira","Cadastre o cartão (6 primeiros dígitos ou login do banco)","Ative a oferta e pague com o cartão"],ex:"Ative um cupom de 15% em um restaurante parceiro antes de pagar."},
+garantia:{t:"Garantia estendida",cat:"Compras",d:"Amplia a garantia de fábrica de produtos pagos com o cartão.",c:["Pague o produto inteiro com o cartão","Guarde a nota fiscal e a fatura","Se der defeito, acione a central de seguros"],ex:"TV com 12 meses de garantia pode ganhar mais 12, conforme as regras."},
+compra:{t:"Proteção de compra",cat:"Compras",d:"Cobre roubo ou dano acidental de itens recém-comprados.",c:["Pague com o cartão","Registre BO em caso de roubo","Envie BO, nota e fatura à seguradora no prazo"],ex:"Celular novo roubado 20 dias após a compra? Pode haver cobertura."},
+preco:{t:"Proteção de preço",cat:"Compras",d:"Reembolsa a diferença se você achar o mesmo produto mais barato.",c:["Encontre anúncio do mesmo item mais barato","Acione dentro do prazo","Envie os comprovantes"],ex:"Comprou um fone por R$ 500 e achou por R$ 420? Pode receber R$ 80."},
+segviag:{t:"Seguro viagem internacional",cat:"Viagem",d:"Cobre emergência médica no exterior.",c:["Compre a passagem com o cartão","Emita o certificado no portal da bandeira antes de viajar","Em emergência, ligue para a central de assistência"],ex:"Uma consulta de emergência nos EUA custa milhares de dólares; o seguro cobre conforme o limite."},
+carro:{t:"Seguro de carro alugado",cat:"Viagem",d:"Cobertura contra roubo e danos de carro de locadora.",c:["Reserve e pague o aluguel com o cartão","Recuse o seguro equivalente da locadora (confira as regras)","Guarde o contrato"],ex:"Riscou o carro alugado em Orlando? O seguro pode cobrir."},
+vip:{t:"Salas VIP em aeroportos",cat:"Viagem",d:"Acesso a lounges, ilimitado ou com cota conforme o emissor.",c:["Baixe o app indicado (ex.: Visa Airport Companion, LoungeKey, DragonPass)","Cadastre o cartão","Apresente o QR code na entrada"],ex:"Conexão de 4h em Guarulhos: espere na sala VIP com comida e Wi-Fi."},
+conc:{t:"Concierge",cat:"Lifestyle",d:"Assistente para reservas, ingressos e presentes.",c:["Ligue para o concierge (verso ou site)","Faça o pedido","Os serviços contratados são pagos à parte"],ex:"Peça uma reserva em um restaurante disputado em Paris."},
+exp:{t:"Experiências exclusivas",cat:"Lifestyle",d:"Pré-venda de shows, eventos e gastronomia.",c:["Acesse o portal de experiências da bandeira","Escolha o evento","Pague com o cartão da bandeira"],ex:"Garanta o ingresso na pré-venda antes do público geral."},
+fast:{t:"Fast Pass em aeroportos",cat:"Viagem",d:"Fila exclusiva de embarque em aeroportos selecionados.",c:["Apresente o cartão Infinite e o cartão de embarque","Use a fila sinalizada"],ex:"Fila exclusiva em Guarulhos (terminais 2 e 3)."},
+dutyfree:{t:"Vantagens no Duty Free",cat:"Viagem",d:"Parcelamento sem juros e reserva antecipada.",c:["Reserve online","Pague com o cartão","Retire na ida ou na volta"],ex:"Parcele o perfume em até 12x sem juros (confira as condições)."},
+pet:{t:"Assistência residencial e pet",cat:"Casa",d:"Chaveiro, encanador e cuidados com pet.",c:["Ligue para a central de assistência","Informe o problema","Confira o limite de acionamentos por ano"],ex:"Ficou trancado fora de casa? Peça um chaveiro."},
+escolha:{t:"Escolha seus benefícios",cat:"Personalização",d:"No Elo Nanquim você escolhe até 6 benefícios sem custo extra.",c:["Entre no site ou app da Elo","Faça login com o cartão","Selecione os benefícios"],ex:"Viaja muito? Escolha sala VIP e seguro viagem."},
+mr:{t:"Pontos Membership Rewards",cat:"Pontos",d:"No Amex Green, 1 ponto por dólar gasto (no Brasil e no exterior). Os pontos viram Livelo e não expiram.",c:["Use o cartão normalmente nas compras planejadas","Acompanhe o saldo no app Bradesco ou Livelo","Compare o valor do ponto antes de trocar (produtos, milhas ou fatura)"],ex:"Gastou o equivalente a US$ 500 no mês? Acumula cerca de 500 pontos. Não vale gastar mais só para pontuar."},
+flex:{t:"Limite flexível",cat:"Compras",d:"O limite se ajusta ao seu histórico de gastos e pagamentos.",c:["Pague a fatura inteira e em dia","Consulte o limite disponível no app antes de compras grandes","Defina um teto pessoal de gastos"],ex:"Limite maior não é renda extra: planeje cada compra dentro do seu orçamento."}
+};
+const M={
+cobre:"linear-gradient(135deg,#7a2e12,#d8743c 30%,#f2a46d 45%,#b5481f 60%,#e48450 80%,#6b2610)",
+ouro:"linear-gradient(135deg,#6e5418,#d6b25a 30%,#f8e7a8 45%,#b89035 60%,#ecd283 80%,#5f4612)",
+prata:"linear-gradient(135deg,#55595e,#b9bec4 30%,#eef1f4 45%,#8d9298 60%,#d4d8dc 80%,#4a4e53)",
+grafite:"linear-gradient(135deg,#0d0d0d,#3a3a3a 30%,#6a6a6a 45%,#222 60%,#4a4a4a 80%,#080808)",
+azul:"linear-gradient(135deg,#0b1150,#2c3fb8 30%,#6f82e6 45%,#1a2a8a 60%,#4a5fd0 80%,#080c3a)",
+azulPrata:"linear-gradient(135deg,#1f2b3a,#6f8299 30%,#c3cfdb 45%,#41536a 60%,#8ea0b5 80%,#18222e)",
+azulNoite:"linear-gradient(135deg,#05070f,#1a1f55 30%,#3d4690 45%,#0e1235 60%,#262d6e 80%,#03040a)",
+elo:"linear-gradient(135deg,#00577a,#00a4e0 35%,#7fd6f5 48%,#0086b8 62%,#e0b400 85%,#8a6d00)",
+diners:"linear-gradient(135deg,#00102e,#1d3a75 30%,#8295bb 45%,#0e2552 60%,#4f6898 80%,#000a1f)",
+verde:"linear-gradient(135deg,#0f3d2a,#2f8a5e 30%,#8fd3ae 45%,#1f6b47 60%,#5cb185 80%,#0b2e1f)",
+vermelho:"linear-gradient(135deg,#5a0009,#c8102e 30%,#f2545b 45%,#9a0018 60%,#e0303d 80%,#4a0007)"};
+const CARDS=[
+{id:"mc-std",b:"Mastercard",n:"Standard",cor:M.cobre,r:"Uso diário com proteção básica.",ben:["zero","emerg","desc"],fonte:"https://www.mastercard.com.br"},
+{id:"mc-gold",b:"Mastercard",n:"Gold",cor:M.ouro,r:"Compras com proteções extras.",ben:["zero","emerg","desc","garantia","compra"],fonte:"https://www.mastercard.com.br"},
+{id:"mc-plat",b:"Mastercard",n:"Platinum",cor:M.prata,r:"Seguros e viagens.",ben:["zero","emerg","desc","garantia","compra","segviag","carro","conc","exp"],fonte:"https://www.mastercard.com.br"},
+{id:"mc-black",b:"Mastercard",n:"Black",cor:M.grafite,r:"Topo de linha com salas VIP (conforme emissor).",ben:["zero","emerg","desc","garantia","compra","preco","segviag","carro","vip","conc","exp"],fonte:"https://www.mastercard.com.br"},
+{id:"v-class",b:"Visa",n:"Classic/Gold",cor:M.azul,r:"Entrada, com o programa Vai de Visa.",ben:["zero","emerg","desc"],fonte:"https://www.visa.com.br/pague-com-visa/cartoes/beneficios.html"},
+{id:"v-plat",b:"Visa",n:"Platinum",cor:M.azulPrata,r:"Seguros de viagem e compra.",ben:["zero","emerg","desc","garantia","compra","segviag","carro","conc"],fonte:"https://www.visa.com.br/pague-com-visa/cartoes/beneficios.html"},
+{id:"v-sig",b:"Visa",n:"Signature",cor:M.grafite,r:"Mais coberturas e concierge.",ben:["zero","emerg","desc","garantia","compra","preco","segviag","carro","conc","dutyfree"],fonte:"https://www.visa.com.br/pague-com-visa/cartoes/beneficios.html"},
+{id:"v-inf",b:"Visa",n:"Infinite",cor:M.azulNoite,r:"Mais de 1.300 salas VIP, Fast Pass e lounge exclusivo em GRU.",ben:["zero","emerg","desc","garantia","compra","preco","segviag","carro","vip","fast","conc","dutyfree","exp"],fonte:"https://www.visa.com.br/pague-com-visa/cartoes/cartoes-de-credito/detalhes-visa-infinite.html"},
+{id:"elo-mais",b:"Elo",n:"Mais/Grafite",cor:M.elo,r:"Descontos e proteções intermediárias.",ben:["zero","desc","garantia","compra"],fonte:"https://www.elo.com.br"},
+{id:"elo-nan",b:"Elo",n:"Nanquim",cor:M.grafite,r:"Até 6 benefícios à sua escolha, sala VIP e seguro viagem.",ben:["escolha","zero","vip","segviag","pet","desc","exp"],fonte:"https://www.elo.com.br/cartoes/elo-nanquim/"},
+{id:"elo-din",b:"Elo",n:"Diners Club",cor:M.diners,r:"Viagem com transfer, sala VIP e assistências.",ben:["zero","vip","segviag","pet","conc","exp"],fonte:"https://www.elo.com.br/cartoes-exclusivos/"},
+{id:"amex-green",b:"American Express",n:"Green",cor:M.verde,r:"Porta de entrada da Amex (Bradesco): pontos que viram Livelo e não expiram.",
+ ben:["mr","flex","zero","emerg","exp"],fonte:"https://soliciteseucartao.bradesco/home/cartoes/cartao-amex-green",
+ info:[["Emissor","Bradesco"],["Anuidade","R$ 648/ano em até 12x (tabela vigente desde 03/11/2026; há fonte citando R$ 612)"],["Pontuação","1 ponto por US$ (nacional e internacional)"],["Salas VIP","Não oferece acesso gratuito"],["IOF no exterior","3,5% (confirme spread no emissor)"],["Isenção","Campanha Bradesco: com Seguro Superprotegido ativo e cartão em uso (out/2026)"]],
+ data:"11/11/2026"},
+{id:"amex-gold",b:"American Express",n:"Gold",cor:M.ouro,r:"Pontos Membership Rewards (varia por emissor).",ben:["zero","emerg","garantia","compra","segviag","exp"],fonte:"https://www.americanexpress.com/pt-br/"},
+{id:"amex-plat",b:"American Express",n:"Platinum",cor:M.prata,r:"Premium com salas VIP e concierge.",ben:["zero","emerg","garantia","compra","preco","segviag","carro","vip","conc","exp"],fonte:"https://www.americanexpress.com/pt-br/"},
+{id:"hiper",b:"Hipercard",n:"Hipercard",cor:M.vermelho,r:"Uso nacional e parcelamentos.",ben:["zero","desc"],fonte:"https://www.hipercard.com.br"}
+];
+
+/* APP */
+const fB=$("#fBandeira"),fT=$("#fTexto"),lista=$("#lista"),det=$("#detalhe");
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const ico=id=>`<svg class="ico" aria-hidden="true"><use href="#${id}"/></svg>`;
+const plastic=c=>`
+  <div class="plastic" style="--g:${c.cor}" aria-hidden="true">
+    <div class="pl-top"><div class="emv"></div><svg class="nfc" viewBox="0 0 24 24"><use href="#i-nfc"/></svg></div>
+    <div class="num">•••• •••• •••• ••••</div>
+    <div class="pl-bot"><div><small>SEU NOME</small><div class="cat">${esc(c.n)}</div></div><span class="brand">${esc(c.b)}</span></div>
+  </div>`;
+
+[...new Set(CARDS.map(c=>c.b))].forEach(b=>fB.add(new Option(b,b)));
+
+function render(){
+  const q=fT.value.toLowerCase().trim();
+  const res=CARDS.filter(c=>(!fB.value||c.b===fB.value)&&(!q||`${c.b} ${c.n} ${c.r} ${c.ben.map(k=>B[k].t).join(" ")}`.toLowerCase().includes(q)));
+  lista.innerHTML=res.length?res.map(c=>`
+    <button type="button" class="card" data-id="${c.id}" aria-label="Ver benefícios ${esc(c.b)} ${esc(c.n)}">
+      ${plastic(c)}
+      <h3>${esc(c.b)} ${esc(c.n)}</h3><p>${esc(c.r)}</p><p><b>${c.ben.length} benefícios</b></p>
+    </button>`).join(""):"<p>Nenhum cartão encontrado. Tente outro termo.</p>";
+  lista.querySelectorAll(".card").forEach(el=>el.onclick=()=>abrir(el.dataset.id));
+}
+
+function abrir(id){
+  const c=CARDS.find(x=>x.id===id);
+  const facts=c.info?`<div class="facts">${c.info.map(([k,v])=>`<div><b>${esc(k)}</b>${esc(v)}</div>`).join("")}</div>
+    <p class="sub">Dados consultados em ${esc(c.data)}. Confirme no emissor.</p>`:"";
+  det.innerHTML=`
+    <div class="det-head">
+      ${plastic(c)}
+      <div>
+        <h2>${esc(c.b)} ${esc(c.n)}</h2><p>${esc(c.r)}</p>
+        <p><a class="lnk" href="${esc(c.fonte)}" target="_blank" rel="noopener">Ver no site oficial ${ico("i-ext")}</a></p>
+        <button type="button" class="btn" id="voltar">${ico("i-back")} Voltar à lista</button>
+      </div>
+    </div>
+    ${facts}
+    <p class="alert">${ico("i-alert")}<span>Os benefícios abaixo podem variar conforme o banco emissor, que pode incluir, limitar ou tirar alguns. Confirme no app do emissor.</span></p><br>
+    <div class="bens">${c.ben.map(k=>{const b=B[k];return `
+      <article class="ben">
+        <small>${ico("i-"+b.cat)}${esc(b.cat)}</small><h4>${esc(b.t)}</h4><p>${esc(b.d)}</p>
+        <details><summary>Como acessar</summary><ol>${b.c.map(p=>`<li>${esc(p)}</li>`).join("")}</ol></details>
+        <div class="ex">${ico("i-pin")}<span><b>Exemplo:</b> ${esc(b.ex)}</span></div>
+      </article>`;}).join("")}</div>`;
+  det.classList.remove("hidden");
+  det.scrollIntoView({behavior:"smooth"});det.focus({preventScroll:true});
+  $("#voltar").onclick=()=>{det.classList.add("hidden");$("#busca").scrollIntoView({behavior:"smooth"});};
+}
+
+fB.onchange=render;
+fT.oninput=render;
+fT.addEventListener("keydown",e=>{if(e.key==="Enter")fT.blur();});
+render();
+
+/* PERFIL */
+const NIVEL={"mc-std":1,"v-class":1,"hiper":1,"mc-gold":2,"elo-mais":2,"amex-green":2,
+ "mc-plat":3,"v-plat":3,"v-sig":3,"amex-gold":3,"mc-black":4,"v-inf":4,"elo-nan":4,"elo-din":4,"amex-plat":4};
+const PERFIL=[
+ {g:"Viagens",o:[["v1","Viajo para o exterior pelo menos 1 vez por ano",["segviag","emerg"]],
+   ["v2","Passo por aeroportos com frequência",["vip","fast"]],["v3","Costumo alugar carro em viagens",["carro"]]]},
+ {g:"Compras",o:[["c1","Compro eletrônicos e eletrodomésticos",["garantia","compra"]],
+   ["c2","Faço muitas compras online",["zero","preco"]],["c3","Gosto de descontos em lojas e restaurantes",["desc"]]]},
+ {g:"Estilo de vida",o:[["p1","Quero acumular pontos que não expiram",["mr"]],
+   ["p2","Gosto de shows, eventos e experiências",["exp","conc"]],["h1","Tenho pet ou quero assistência para a casa",["pet"]],
+   ["h2","Quero escolher meus próprios benefícios",["escolha"]]]},
+ {g:"Orçamento e hábitos",o:[["f1","Prefiro anuidade baixa ou zero",[]],
+   ["f2","Gasto mais de R$ 5 mil por mês no cartão e pago a fatura inteira",[]],
+   ["r1","Às vezes pago só o mínimo ou atraso a fatura",[]]]}
+];
+const OPTS=PERFIL.flatMap(g=>g.o.map(([id,t,b])=>({id,t,b})));
+const pf=$("#perfil"),pfForm=$("#pfForm"),pfRes=$("#pfRes");
+
+pfForm.innerHTML=PERFIL.map(g=>`<fieldset><legend>${esc(g.g)}</legend>${g.o.map(([id,t])=>
+  `<label class="chk"><input type="checkbox" value="${id}">${esc(t)}</label>`).join("")}</fieldset>`).join("");
+
+function calcPerfil(){
+  const m=[...pfForm.querySelectorAll("input:checked")].map(i=>i.value);
+  if(!m.length){pfRes.innerHTML=`<h3>Seu resultado</h3><p class="sub">Marque ao menos uma opção para ver os cartões mais compatíveis.</p>`;return;}
+  const sel=OPTS.filter(o=>m.includes(o.id));
+  const res=CARDS.map(c=>{
+    const n=NIVEL[c.id]||2,why=new Set();let s=0;
+    sel.forEach(o=>o.b.forEach(k=>{if(c.ben.includes(k)){s+=2;why.add(B[k].t);}}));
+    if(m.includes("f1")){s+=(4-n)*2;if(n<=2)why.add("Categoria de entrada, geralmente com anuidade menor");}
+    if(m.includes("f2")){s+=(n-1)*1.5;if(n>=3)why.add("Categoria premium, para quem tem gasto alto");}
+    if(m.includes("r1"))s+=(4-n)*3;
+    return{c,s,why:[...why].slice(0,3)};
+  }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||(NIVEL[a.c.id]-NIVEL[b.c.id])).slice(0,3);
+  const top=res[0]?.s||1;
+  const aviso=m.includes("r1")?`<p class="alert">${ico("i-alert")}<span><b>Prioridade: sair do rotativo.</b> Os juros do rotativo estão entre os mais altos do mercado e anulam qualquer benefício. Antes de trocar de cartão, procure o banco para negociar ou o Procon para orientação.</span></p>`:"";
+  pfRes.innerHTML=`<h3>Seu resultado</h3>${aviso}${res.length?res.map((x,i)=>{const p=Math.round(x.s/top*100);return `
+    <div class="rk">
+      ${plastic(x.c)}
+      <div>
+        <span class="pos">${i+1}º mais compatível</span>
+        <h4>${esc(x.c.b)} ${esc(x.c.n)}</h4>
+        <div class="pct" title="${p}%"><i style="width:${p}%"></i></div>
+        ${x.why.length?`<ul>${x.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>`:""}
+        <button type="button" class="btn" data-ver="${x.c.id}">Ver benefícios</button>
+      </div>
+    </div>`;}).join(""):"<p>Nenhum cartão combina com essas opções.</p>"}
+    <p class="sub" style="font-size:.78rem;margin:8px 0 0">Comparação educativa feita em 11/11/2026. Confirme anuidade e regras com o emissor.</p>`;
+  pfRes.querySelectorAll("[data-ver]").forEach(b=>b.onclick=()=>{fecharDlg(pf);abrir(b.dataset.ver);});
+}
+pfForm.addEventListener("change",calcPerfil);
+
+document.querySelectorAll("[data-perfil]").forEach(b=>b.onclick=()=>{calcPerfil();abrirDlg(pf);});
+$("#fecharPerfil").onclick=()=>fecharDlg(pf);
+pf.addEventListener("click",e=>{if(e.target===pf)fecharDlg(pf);});
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-const VERSION = "cartaolupa-v1";
+const VERSION = "cartaolupa-v2";
 const CORE = [
   "./", "./index.html", "./offline.html", "./manifest.webmanifest",
   "./icons/favicon.svg", "./icons/icon-192.png", "./icons/icon-512.png"
